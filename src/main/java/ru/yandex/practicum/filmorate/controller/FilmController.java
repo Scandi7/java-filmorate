@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
     private final List<Film> films = new ArrayList<>();
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
@@ -36,6 +36,7 @@ public class FilmController {
         log.warn("Фильм с id {} не найден", film.getId());
         throw new ValidationException("Фильм с таким id не найден");
     }
+
     @GetMapping
     public List<Film> getAllFilms() {
         return films;
