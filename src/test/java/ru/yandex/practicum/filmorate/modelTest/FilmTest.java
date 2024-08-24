@@ -1,3 +1,4 @@
+
 package ru.yandex.practicum.filmorate.modelTest;
 
 import org.junit.jupiter.api.Test;
@@ -66,3 +67,4 @@ public class FilmTest {
         assertFalse(validator.validate(film).isEmpty());
     }
 }
+
