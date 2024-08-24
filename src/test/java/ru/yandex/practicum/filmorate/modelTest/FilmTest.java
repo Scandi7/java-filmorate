@@ -22,7 +22,6 @@ public class FilmTest {
     @Test
     void nameIsNull() {
         Film film = new Film();
-        film.setId(1);
         film.setName(null);
         film.setDescription("Test description");
         film.setReleaseDate(LocalDate.of(2020,1,1));
@@ -34,7 +33,6 @@ public class FilmTest {
     @Test
     void descriptionTooLong() {
         Film film = new Film();
-        film.setId(1);
         film.setName("Test");
         film.setDescription("Test description too long Test description too long Test description too long " +
                 "Test description too long Test description too long Test description too long" +
@@ -48,7 +46,6 @@ public class FilmTest {
     @Test
     void releaseDateEarly() {
         Film film = new Film();
-        film.setId(1);
         film.setName("Test");
         film.setDescription("Test description");
         film.setDuration(60);
@@ -61,7 +58,6 @@ public class FilmTest {
     @Test
     void durationIsNegative() {
         Film film = new Film();
-        film.setId(1);
         film.setName("Test");
         film.setDescription("Test description");
         film.setReleaseDate(LocalDate.of(2020,1,1));
