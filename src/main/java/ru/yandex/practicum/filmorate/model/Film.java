@@ -1,12 +1,12 @@
 package ru.yandex.practicum.filmorate.model;
 
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 
 public class Film {
@@ -24,7 +24,13 @@ public class Film {
     @Positive(message = "Продолжительность фильма должна быть позитивынм числом")
     private int duration;
 
-    private Set<Integer> likes = new HashSet<>();
+    public void setReleaseDate(LocalDate releaseDate) {
+        LocalDate earlyReleaseDate = LocalDate.of(1895, 12, 28);
+        if (releaseDate.isBefore(earlyReleaseDate)) {
+            throw new ValidationException("Дата релиза не может быть раньше 28.12.1895");
+        }
+        this.releaseDate = releaseDate;
+    }
 
     public int getId() {
         return id;
@@ -83,17 +89,5 @@ public class Film {
                 ", releaseDate=" + releaseDate +
                 ", duration=" + duration +
                 '}';
-    }
-
-    public Set<Integer> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Set<Integer> likes) {
-        this.likes = likes;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
     }
 }
