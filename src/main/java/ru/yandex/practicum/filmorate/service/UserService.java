@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -85,7 +84,6 @@ public class UserService {
         if (user.getFriends().contains(friendId)) {
             throw new ValidationException("Пользователь уже добавлен в друзья");
         }
-
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
         userStorage.updateUser(user);
@@ -99,30 +97,25 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("Друг с id " + friendId + " не найден"));
 
         if (!user.getFriends().contains(friendId)) {
-            throw new ValidationException("Пользователи не являются друзьями");
+            return;
         }
-
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
         userStorage.updateUser(user);
         userStorage.updateUser(friend);
     }
 
-
     public List<User> getFriends(int userId) {
-        User user = userStorage.getUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найден"));
-
-        return user.getFriends().stream()
-                .map(friendId -> userStorage.getUserById(friendId)
-                        .orElseThrow(() -> new UserNotFoundException("Друг с id " + friendId + " не найден")))
-                .collect(Collectors.toList());
+        return userStorage.getFriends(userId);
     }
 
     public List<User> getCommonFriends(int userId, int otherId) {
-        User user = userStorage.getUserById(userId).orElseThrow(() -> new ValidationException("Пользователь не найден"));
-        User otherUser = userStorage.getUserById(otherId).orElseThrow(() -> new ValidationException(
-                "Другой пользователь не найден"));
+        User user = userStorage.getUserById(userId)
+                .orElseThrow(() -> new ValidationException("Пользователь не найден"));
+        User otherUser = userStorage.getUserById(otherId)
+                .orElseThrow(() -> new ValidationException(
+                        "Другой пользователь не найден"));
+
         Set<Integer> commonFriendsIds = new HashSet<>(user.getFriends());
         commonFriendsIds.retainAll(otherUser.getFriends());
         List<User> commonFriends = new ArrayList<>();

@@ -15,10 +15,12 @@ import java.util.Optional;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final UserService userService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserService userService) {
         this.filmStorage = filmStorage;
+        this.userService = userService;
     }
 
     public Film addFilm(Film film) {
@@ -28,12 +30,9 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
         validateFilm(film);
-        Optional<Film> existingFilm = filmStorage.getFilmById(film.getId());
-        if (existingFilm.isPresent()) {
-            return filmStorage.updateFilm(film);
-        } else {
-            throw new UserNotFoundException("Фильм с таким id не найден");
-        }
+        filmStorage.getFilmById(film.getId())
+                .orElseThrow(() -> new UserNotFoundException("Фильм с таким id не найден"));
+        return filmStorage.updateFilm(film);
     }
 
     private void validateFilm(Film film) {
@@ -60,13 +59,21 @@ public class FilmService {
     }
 
     public void addLike(int filmId, int userId) {
-        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new ValidationException("Фильм не найден"));
+        Film film = filmStorage.getFilmById(filmId)
+                .orElseThrow(() -> new UserNotFoundException("Фильм не найден"));
+        if (!userService.existsById(userId)) {
+            throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
+        }
         film.getLikes().add(userId);
         filmStorage.updateFilm(film);
     }
 
     public void removeLike(int filmId, int userId) {
-        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new ValidationException("Фильм не найден"));
+        Film film = filmStorage.getFilmById(filmId)
+                .orElseThrow(() -> new UserNotFoundException("Фильм не найден"));
+        if (!userService.existsById(userId)) {
+            throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
+        }
         film.getLikes().remove(userId);
         filmStorage.updateFilm(film);
     }
