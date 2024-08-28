@@ -3,13 +3,13 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.yandex.practicum.filmorate.validation.ValidateFilm.validateFilm;
 
 @Service
 public class FilmService {
@@ -33,21 +33,6 @@ public class FilmService {
         filmStorage.getFilmById(film.getId())
                 .orElseThrow(() -> new UserNotFoundException("Фильм с таким id не найден"));
         return filmStorage.updateFilm(film);
-    }
-
-    private void validateFilm(Film film) {
-        if (film.getName() == null || film.getName().isEmpty()) {
-            throw new ValidationException("Название фильма не может быть пустым");
-        }
-        if (film.getDescription() != null && film.getDescription().length() > 200) {
-            throw new ValidationException("Описание фильма не может превышать 200 символов");
-        }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Дата релиза не может быть раньше 28.12.1895");
-        }
-        if (film.getDuration() <= 0) {
-            throw new ValidationException("Продолжительность фильма должна быть положительным числом");
-        }
     }
 
     public Optional<Film> getFilmById(int id) {

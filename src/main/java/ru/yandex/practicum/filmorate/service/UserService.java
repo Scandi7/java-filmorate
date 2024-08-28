@@ -7,9 +7,10 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static ru.yandex.practicum.filmorate.validation.ValidateUser.validateUser;
 
 @Service
 public class UserService {
@@ -53,18 +54,6 @@ public class UserService {
         User user = userStorage.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найден"));
         return user.getFriends().contains(friendId);
-    }
-
-    private void validateUser(User user) {
-        if (user.getLogin().contains(" ")) {
-            throw new ValidationException("Логин не может содержать пробелы");
-        }
-        if (!user.getEmail().contains("@")) {
-            throw new ValidationException("Некорректный email");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
     }
 
     public Optional<User> getUserById(int id) {
