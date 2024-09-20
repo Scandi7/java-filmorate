@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -26,7 +27,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.set(index, user);
             return user;
         } else {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("Пользователь не найден");
         }
     }
 
@@ -39,6 +40,17 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         return new ArrayList<>(users);
+    }
+
+    @Override
+    public List<User> getFriends(int userId) {
+        User user = getUserById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найден"));
+
+        return user.getFriends().stream()
+                .map(friendId -> getUserById(friendId)
+                        .orElseThrow(() -> new UserNotFoundException("Friend with id " + friendId + " not found")))
+                .collect(Collectors.toList());
     }
 }
 
