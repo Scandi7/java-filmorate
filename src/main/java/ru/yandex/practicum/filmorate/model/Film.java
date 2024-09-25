@@ -26,6 +26,10 @@ public class Film {
 
     private Set<Integer> likes = new HashSet<>();
 
+    private Set<Genre> genres = new HashSet<>();
+
+    private MpaRating mpa;
+
     public int getId() {
         return id;
     }
@@ -95,5 +99,21 @@ public class Film {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public MpaRating getMpa() {
+        return mpa;
+    }
+
+    public void setMpa(MpaRating mpa) {
+        this.mpa = mpa;
     }
 }
