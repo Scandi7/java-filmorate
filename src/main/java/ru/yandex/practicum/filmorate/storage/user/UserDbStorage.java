@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.storage.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,12 +45,20 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Optional<User> getUserById(int id) {
-        String sql = "SELECT * FROM users WHERE user_id = ?";
-        List<User> users = jdbcTemplate.query(sql, userRowMapper, id);
+        String sqlUser = "SELECT * FROM users WHERE user_id = ?";
+        List<User> users = jdbcTemplate.query(sqlUser, userRowMapper, id);
+
         if (users.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(users.get(0));
+
+        User user = users.get(0);
+
+        String sqlFriends = "SELECT friend_id FROM friendships WHERE user_id = ?";
+        List<Integer> friendIds = jdbcTemplate.queryForList(sqlFriends, Integer.class, id);
+
+        user.setFriends(new HashSet<>(friendIds));
+        return Optional.of(user);
     }
 
     @Override
@@ -62,5 +71,24 @@ public class UserDbStorage implements UserStorage {
     public List<User> getFriends(int userId) {
         String sql = "SELECT * FROM users WHERE user_id IN (SELECT friend_id FROM friendships WHERE user_id = ?)";
         return jdbcTemplate.query(sql, userRowMapper, userId);
+    }
+
+    @Override
+    public void addFriendship(int userId, int friendId) {
+        String sql = "INSERT INTO friendships (user_id, friend_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, friendId);
+    }
+
+    @Override
+    public void removeFriendship(int userId, int friendId) {
+        String sql = "DELETE FROM friendships WHERE user_id = ? AND friend_id = ?";
+        jdbcTemplate.update(sql, userId, friendId);
+    }
+
+    @Override
+    public boolean areFriends(int userId, int friendId) {
+        String sql = "SELECT COUNT(*) FROM friendships WHERE user_id = ? AND friend_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId, friendId);
+        return count != null && count > 0;
     }
 }
