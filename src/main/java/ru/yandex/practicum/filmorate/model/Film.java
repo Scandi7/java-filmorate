@@ -4,9 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 public class Film {
@@ -26,7 +24,7 @@ public class Film {
 
     private Set<Integer> likes = new HashSet<>();
 
-    private Set<Genre> genres = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
 
     private MpaRating mpa;
 
@@ -101,19 +99,19 @@ public class Film {
         this.releaseDate = releaseDate;
     }
 
-    public Set<Genre> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
-    }
-
     public MpaRating getMpa() {
         return mpa;
     }
 
     public void setMpa(MpaRating mpa) {
         this.mpa = mpa;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
     }
 }
