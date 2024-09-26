@@ -150,4 +150,10 @@ public class FilmDbStorage implements FilmStorage {
         }
         return films;
     }
+
+    @Override
+    public void addLikeToFilm(int filmId, int userId) {
+        String sql = "INSERT INTO likes (film_id, user_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, filmId, userId);
+    }
 }

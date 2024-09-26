@@ -62,8 +62,8 @@ public class FilmService {
         if (!userService.existsById(userId)) {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }
-        film.getLikes().add(userId);
-        filmStorage.updateFilm(film);
+
+        filmStorage.addLikeToFilm(filmId, userId);
     }
 
     public void removeLike(int filmId, int userId) {
