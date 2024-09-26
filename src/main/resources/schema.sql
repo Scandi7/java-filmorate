@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS mpa_ratings
     mpa_id      INT AUTO_INCREMENT PRIMARY KEY,
     rating      VARCHAR NOT NULL,
     description VARCHAR,
-    CONSTRAINT unique_rating_name UNIQUE (rating)
+    /*CONSTRAINT unique_rating_name UNIQUE (rating)*/
 );
 
 CREATE TABLE IF NOT EXISTS films
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS genres
 (
     genre_id INT AUTO_INCREMENT PRIMARY KEY,
     name     VARCHAR NOT NULL,
-    CONSTRAINT unique_genre_name UNIQUE (name)
+    /*CONSTRAINT unique_genre_name UNIQUE (name)*/
 );
 
 CREATE TABLE IF NOT EXISTS film_genres
