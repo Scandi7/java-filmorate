@@ -114,3 +114,21 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "SELECT user_id FROM likes WHERE film_id = ?";
         return new HashSet<>(jdbcTemplate.queryForList(sql, Integer.class, filmId));
     }
+
+    @Override
+    public List<Film> getPopularFilms(int count) {
+        String sql = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id, " +
+                "COUNT(l.user_id) AS likes_count " +
+                "FROM films f " +
+                "LEFT JOIN likes l ON f.film_id = l.film_id " +
+                "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_id " +
+                "ORDER BY likes_count DESC, f.film_id ASC " +
+                "LIMIT ?";
+        List<Film> films = jdbcTemplate.query(sql, filmMapper, count);
+        for (Film film : films) {
+            film.setGenres(getGenresByFilmId(film.getId()));
+            film.setLikes(getLikesByFilmId(film.getId()));
+        }
+        return films;
+    }
+}
