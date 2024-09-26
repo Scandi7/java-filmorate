@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/genres")
@@ -21,10 +22,18 @@ public class GenreController {
         this.genreStorage = genreStorage;
     }
 
-    @GetMapping
+/*    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Genre> getAllGenres() {
         return genreStorage.getAllGenres();
+    }*/
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Genre> getAllGenres(@RequestParam(defaultValue = "6") int limit) {
+        return genreStorage.getAllGenres().stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/mpa")
@@ -36,11 +37,9 @@ public class MpaRatingController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MpaRating> getAllMpa(@RequestParam(required = false) Integer limit) {
-        List<MpaRating> allMpa = mpaRatingStorage.getAllMpa();
-        if (limit != null && limit > 0 && limit <= allMpa.size()) {
-            return allMpa.subList(0, limit);
-        }
-        return allMpa;
+    public List<MpaRating> getAllMpa(@RequestParam(defaultValue = "5") int limit) {
+        return mpaRatingStorage.getAllMpa().stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }
