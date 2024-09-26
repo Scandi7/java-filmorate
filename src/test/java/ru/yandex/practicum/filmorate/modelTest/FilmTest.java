@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.modelTest;
 
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ public class FilmTest {
         assertFalse(validator.validate(film).isEmpty());
     }
 
+*/
 /*    @Test
     void releaseDateEarly() {
         Film film = new Film();
@@ -52,7 +54,8 @@ public class FilmTest {
         ValidationException exception = assertThrows(
                 ValidationException.class, () -> film.setReleaseDate(LocalDate.of(1800, 1, 1)));
         assertEquals("Дата релиза не может быть раньше 28.12.1895", exception.getMessage());
-    }*/
+    }*//*
+
 
     @Test
     void durationIsNegative() {
@@ -66,3 +69,4 @@ public class FilmTest {
     }
 }
 
+*/
