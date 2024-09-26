@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
 
 import java.util.List;
-import java.util.Optional;
 
 import static ru.yandex.practicum.filmorate.validation.ValidateFilm.validateFilm;
 
@@ -48,8 +47,9 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public Optional<Film> getFilmById(int id) {
-        return filmStorage.getFilmById(id);
+    public Film getFilmById(int id) {
+        return filmStorage.getFilmById(id)
+                .orElseThrow(() -> new NotFoundException("Фильм с id " + id + " не найден"));
     }
 
     public List<Film> getAllFilms() {
@@ -58,7 +58,7 @@ public class FilmService {
 
     public void addLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId)
-                .orElseThrow(() -> new UserNotFoundException("Фильм не найден"));
+                .orElseThrow(() -> new NotFoundException("Фильм не найден"));
         if (!userService.existsById(userId)) {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }
@@ -68,7 +68,7 @@ public class FilmService {
 
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId)
-                .orElseThrow(() -> new UserNotFoundException("Фильм не найден"));
+                .orElseThrow(() -> new NotFoundException("Фильм не найден"));
         if (!userService.existsById(userId)) {
             throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
         }

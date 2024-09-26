@@ -109,9 +109,15 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void addFilmGenres(Film film) {
-        String sql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
+        String checkSql = "SELECT COUNT(*) FROM film_genres WHERE film_id = ? AND genre_id = ?";
+        String insertSql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
+
         for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(sql, film.getId(), genre.getId());
+            Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, film.getId(), genre.getId());
+
+            if (count == null || count == 0) {
+                jdbcTemplate.update(insertSql, film.getId(), genre.getId());
+            }
         }
     }
 

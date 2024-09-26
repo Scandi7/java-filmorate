@@ -1,7 +1,7 @@
-/*
 package ru.yandex.practicum.filmorate.modelTest;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Validation;
@@ -9,7 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmTest {
     private final Validator validator;
@@ -43,7 +43,6 @@ public class FilmTest {
         assertFalse(validator.validate(film).isEmpty());
     }
 
-*/
 /*    @Test
     void releaseDateEarly() {
         Film film = new Film();
@@ -54,7 +53,7 @@ public class FilmTest {
         ValidationException exception = assertThrows(
                 ValidationException.class, () -> film.setReleaseDate(LocalDate.of(1800, 1, 1)));
         assertEquals("Дата релиза не может быть раньше 28.12.1895", exception.getMessage());
-    }*//*
+    }*/
 
 
     @Test
@@ -69,4 +68,3 @@ public class FilmTest {
     }
 }
 
-*/
