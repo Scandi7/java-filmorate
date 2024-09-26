@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
 
@@ -30,6 +31,6 @@ public class MpaRatingController {
     @ResponseStatus(HttpStatus.OK)
     public MpaRating getMpaById(@PathVariable int id) {
         return mpaRatingStorage.getMpaById(id)
-                .orElseThrow(() -> new RuntimeException("MPA рейтинг с id " + id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + id + " не найден"));
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
@@ -30,6 +31,6 @@ public class GenreController {
     @ResponseStatus(HttpStatus.OK)
     public Genre getGenreById(@PathVariable int id) {
         return genreStorage.getGenreById(id)
-                .orElseThrow(() -> new RuntimeException("Жанр с id " + id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Жанр с id " + id + " не найден"));
     }
 }
