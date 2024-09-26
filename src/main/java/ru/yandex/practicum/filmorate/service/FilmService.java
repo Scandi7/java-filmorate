@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -37,17 +35,8 @@ public class FilmService {
         this.mpaRatingStorage = mpaRatingStorage;
     }
 
-/*    public Film addFilm(Film film) {
-        validateFilmWithDependencies(film);
-        return filmStorage.addFilm(film);
-    }*/
-
     public Film addFilm(Film film) {
-        try {
-            validateFilmWithDependencies(film);
-        } catch (ValidationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        validateFilmWithDependencies(film);
         return filmStorage.addFilm(film);
     }
 

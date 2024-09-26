@@ -22,12 +22,6 @@ public class MpaRatingController {
         this.mpaRatingStorage = mpaRatingStorage;
     }
 
-/*    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<MpaRating> getAllMpa() {
-        return mpaRatingStorage.getAllMpa();
-    }*/
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MpaRating getMpaById(@PathVariable int id) {
