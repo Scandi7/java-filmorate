@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.storage.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.mapper.GenreMapper;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaRatingStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import java.sql.PreparedStatement;
 import java.util.HashSet;
@@ -22,10 +24,12 @@ public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final FilmMapper filmMapper;
+    private final MpaRatingStorage mpaRatingStorage;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper, MpaRatingStorage mpaRatingStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.filmMapper = filmMapper;
+        this.mpaRatingStorage = mpaRatingStorage;
     }
 
     @Override
@@ -45,11 +49,14 @@ public class FilmDbStorage implements FilmStorage {
 
         int filmId = keyHolder.getKey().intValue();
         film.setId(filmId);
-
+        deleteFilmGenres(filmId);
         addFilmGenres(film);
+        film.setMpa(mpaRatingStorage.getMpaById(film.getMpa().getId())
+                .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + film.getMpa().getId() + " не найден")));
 
         return film;
     }
+
 
     @Override
     public Film updateFilm(Film film) {
@@ -63,11 +70,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getId());
 
         if (rows == 0) {
-            return null;
+            throw new NotFoundException("Фильм с id " + film.getId() + " не найден");
         }
-
-        jdbcTemplate.update("DELETE FROM film_genres WHERE film_id = ?", film.getId());
+        deleteFilmGenres(film.getId());
         addFilmGenres(film);
+        film.setMpa(mpaRatingStorage.getMpaById(film.getMpa().getId())
+                .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + film.getMpa().getId() + " не найден")));
 
         return film;
     }
@@ -82,6 +90,8 @@ public class FilmDbStorage implements FilmStorage {
         Film film = films.get(0);
         film.setGenres(getGenresByFilmId(id));
         film.setLikes(getLikesByFilmId(id));
+        film.setMpa(mpaRatingStorage.getMpaById(film.getMpa().getId())
+                .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + film.getMpa().getId() + " не найден")));
         return Optional.of(film);
     }
 
@@ -92,15 +102,22 @@ public class FilmDbStorage implements FilmStorage {
         for (Film film : films) {
             film.setGenres(getGenresByFilmId(film.getId()));
             film.setLikes(getLikesByFilmId(film.getId()));
+            film.setMpa(mpaRatingStorage.getMpaById(film.getMpa().getId())
+                    .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + film.getMpa().getId() + " не найден")));
         }
         return films;
     }
 
     private void addFilmGenres(Film film) {
         String sql = "INSERT INTO film_genres (film_id, genre_id) VALUES (?, ?)";
-        for (Integer genreId : film.getGenres().stream().map(genre -> genre.getId()).toList()) {
-            jdbcTemplate.update(sql, film.getId(), genreId);
+        for (Genre genre : film.getGenres()) {
+            jdbcTemplate.update(sql, film.getId(), genre.getId());
         }
+    }
+
+    private void deleteFilmGenres(int filmId) {
+        String sql = "DELETE FROM film_genres WHERE film_id = ?";
+        jdbcTemplate.update(sql, filmId);
     }
 
     private List<Genre> getGenresByFilmId(int filmId) {
@@ -128,6 +145,8 @@ public class FilmDbStorage implements FilmStorage {
         for (Film film : films) {
             film.setGenres(getGenresByFilmId(film.getId()));
             film.setLikes(getLikesByFilmId(film.getId()));
+            film.setMpa(mpaRatingStorage.getMpaById(film.getMpa().getId())
+                    .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + film.getMpa().getId() + " не найден")));
         }
         return films;
     }

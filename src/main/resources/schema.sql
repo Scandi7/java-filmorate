@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS mpa_ratings (
-                                           mpa_id INT PRIMARY KEY,
+                                           mpa_id INT AUTO_INCREMENT PRIMARY KEY,
                                            rating VARCHAR NOT NULL,
                                            description VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS films (
-    film_id      INT PRIMARY KEY,
+    film_id      INT AUTO_INCREMENT PRIMARY KEY,
     name         VARCHAR NOT NULL,
     description  VARCHAR(200),
     release_date DATE    NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS film_genres (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    user_id INT PRIMARY KEY,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR NOT NULL,
     login VARCHAR NOT NULL,
     name VARCHAR,
