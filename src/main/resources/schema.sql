@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS films (
 );
 
 CREATE TABLE IF NOT EXISTS genres (
-    genre_id INT PRIMARY KEY,
+    genre_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR NOT NULL
 );
 
