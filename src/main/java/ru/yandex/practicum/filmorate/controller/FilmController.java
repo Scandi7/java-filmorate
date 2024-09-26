@@ -26,7 +26,6 @@ public class FilmController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public Film createFilm(@RequestBody Film film) {
         return filmService.addFilm(film);
     }

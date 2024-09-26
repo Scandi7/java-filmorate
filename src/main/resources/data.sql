@@ -1,16 +1,14 @@
-MERGE INTO genres (name)
-    KEY(name)
-    VALUES
-        ('Комедия'),
+INSERT INTO genres (name)
+VALUES
+    ('Комедия'),
     ('Драма'),
     ('Мультфильм'),
     ('Триллер'),
     ('Документальный'),
     ('Боевик');
 
-MERGE INTO mpa_ratings (rating, description)
-    KEY(rating)
-    VALUES
+INSERT INTO mpa_ratings (rating, description)
+VALUES
     ('G', 'У фильма нет возрастных ограничений'),
     ('PG', 'Детям рекомендуется смотреть фильм с родителями'),
     ('PG-13', 'Детям до 13 лет просмотр не желателен'),

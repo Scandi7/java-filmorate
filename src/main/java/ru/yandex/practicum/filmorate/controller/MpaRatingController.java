@@ -21,16 +21,26 @@ public class MpaRatingController {
         this.mpaRatingStorage = mpaRatingStorage;
     }
 
-    @GetMapping
+/*    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<MpaRating> getAllMpa() {
         return mpaRatingStorage.getAllMpa();
-    }
+    }*/
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MpaRating getMpaById(@PathVariable int id) {
         return mpaRatingStorage.getMpaById(id)
                 .orElseThrow(() -> new NotFoundException("MPA рейтинг с id " + id + " не найден"));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<MpaRating> getAllMpa(@RequestParam(required = false) Integer limit) {
+        List<MpaRating> allMpa = mpaRatingStorage.getAllMpa();
+        if (limit != null && limit > 0 && limit <= allMpa.size()) {
+            return allMpa.subList(0, limit);
+        }
+        return allMpa;
     }
 }
