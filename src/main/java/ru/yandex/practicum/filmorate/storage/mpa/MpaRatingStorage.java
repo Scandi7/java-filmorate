@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MpaRatingStorage {
-    List<MpaRating> getAllMpa();
+    List<MpaRating> getAllMpa(int limit);
 
     Optional<MpaRating> getMpaById(int id);
 }

@@ -22,18 +22,15 @@ public class MpaRatingDbStorage implements MpaRatingStorage {
     }
 
     @Override
-    public List<MpaRating> getAllMpa() {
-        String sql = "SELECT * FROM mpa_ratings";
-        return jdbcTemplate.query(sql, mpaRatingMapper);
+    public List<MpaRating> getAllMpa(int limit) {
+        String sql = "SELECT * FROM mpa_ratings ORDER BY mpa_id ASC LIMIT ?";
+        return jdbcTemplate.query(sql, mpaRatingMapper, limit);
     }
 
     @Override
     public Optional<MpaRating> getMpaById(int id) {
         String sql = "SELECT * FROM mpa_ratings WHERE mpa_id = ?";
         List<MpaRating> mpaList = jdbcTemplate.query(sql, mpaRatingMapper, id);
-        if (mpaList.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(mpaList.get(0));
+        return mpaList.stream().findFirst();
     }
 }

@@ -22,18 +22,15 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public List<Genre> getAllGenres() {
-        String sql = "SELECT * FROM genres";
-        return jdbcTemplate.query(sql, genreMapper);
+    public List<Genre> getAllGenres(int limit) {
+        String sql = "SELECT * FROM genres ORDER BY genre_id ASC LIMIT ?";
+        return jdbcTemplate.query(sql, genreMapper, limit);
     }
 
     @Override
     public Optional<Genre> getGenreById(int id) {
         String sql = "SELECT * FROM genres WHERE genre_id = ?";
         List<Genre> genres = jdbcTemplate.query(sql, genreMapper, id);
-        if (genres.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(genres.get(0));
+        return genres.stream().findFirst();
     }
 }
