@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,22 +19,27 @@ public class FilmController {
         this.filmService = filmService;
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getAllFilms() {
+        return filmService.getAllFilms();
+    }
+
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Film addFilm(@Valid @RequestBody Film film) {
+    public Film createFilm(@RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Film updateFilm(@Valid @RequestBody Film film) {
+    public Film updateFilm(@RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
-    @GetMapping
+    @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> getAllFilms() {
-        return filmService.getAllFilms();
+    public List<Film> getPopularFilms(@RequestParam int count) {
+        return filmService.getPopularFilms(count);
     }
 
     @PutMapping("/{id}/like/{userId}")
@@ -50,9 +54,9 @@ public class FilmController {
         filmService.removeLike(id, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
-        return filmService.getPopularFilms(count);
+    public Film getFilmById(@PathVariable int id) {
+        return filmService.getFilmById(id);
     }
 }

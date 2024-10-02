@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class InMemoryUserStorage implements UserStorage {
+public abstract class InMemoryUserStorage implements UserStorage {
 
     private final List<User> users = new ArrayList<>();
 
@@ -53,4 +53,3 @@ public class InMemoryUserStorage implements UserStorage {
                 .collect(Collectors.toList());
     }
 }
-
